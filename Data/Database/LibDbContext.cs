@@ -19,4 +19,9 @@ public class LibDbContext : DbContext
     {
         optionsBuilder.UseInMemoryDatabase("Library");
     }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Seed();
+    }
 }

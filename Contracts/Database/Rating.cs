@@ -6,9 +6,12 @@ namespace Contracts.Database;
 public class Rating
 {
     [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; init; }
 
-    [ForeignKey(nameof(Book))]
+    [ForeignKey("Book")]
     public int BookId { get; init; }
-    public float Score { get; init; }
+    public decimal Score { get; init; }
+
+    // public virtual Book Book { get; init; }
 }

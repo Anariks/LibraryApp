@@ -6,10 +6,14 @@ namespace Contracts.Database;
 public class Review
 {
     [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; init; }
     public string Message { get; init; }
 
-    [ForeignKey(nameof(Book))]
+    [ForeignKey("Book")]
     public int BookId { get; init; }
     public string Reviewer { get; init; }
+
+    // [ForeignKey("Book")]
+    // public virtual Book Book { get; init; }
 }
