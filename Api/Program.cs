@@ -27,16 +27,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
-
-builder.Services.AddScoped<IValidator<GetBookByIdRequest>, GetBookByIdRequestValidator>();
-builder.Services.AddScoped<IValidator<GetBooksAndOrderRequest>, GetBooksAndOrderRequestValidator>();
-
-builder.Services.AddScoped<IValidator<GetBookByIdRequest>, GetBookByIdRequestValidator>();
-builder.Services.AddScoped<IValidator<DelBookByIdRequest>, DelBookByIdRequestValidator>();
-builder.Services.AddScoped<IValidator<CreateBookRequest>, CreateOrUpdateBookValidator>();
-builder.Services.AddScoped<IValidator<CreateReviewRequest>, CreateReviewRequestValidator>();
-builder.Services.AddScoped<IValidator<CreateRateRequest>, CreateRateRequestValidator>();
+builder.Services.AddFluentValidation();
 
 //builder.Services.AddSwaggerGen();
 builder.Services.Configure<LibConfiguration>(builder.Configuration.GetSection("LibConfiguration"));
