@@ -1,48 +1,73 @@
-using AutoMapper;
+using System.Security;
+using Business.Configuration;
 using Contracts.ApiDTO.GetAllBooks;
+using Contracts.ApiDTO.Requests;
 using Contracts.Database;
 using Contracts.Interfaces;
-using Data.Repository;
+using Microsoft.Extensions.Options;
 
 public class LibService : ILibService
 {
     private readonly ILibRepository _libRepository;
-    private readonly IMapper _mapper;
 
-    public LibService(ILibRepository libRepository, IMapper autoMapper)
+    private readonly string _config;
+
+    public LibService(ILibRepository libRepository, IOptions<LibConfiguration> config)
     {
         _libRepository = libRepository;
-        _mapper = autoMapper;
+        _config = config.Value.SecretKey;
     }
 
-    // public List<BookDto> GetAllBooks(string param)
-    // {
-    //     var query = _libRepository.GetAllBooks();
-    //     return _mapper.ProjectTo<Contracts.ApiDTO.GetAllBooks.BookDto>(query).ToList();
-
-    //     // return _mapper.Map<List<Contracts.ApiDTO.GetAllBooks.BookDto>>(books);
-    // }
-
-    public async Task<List<BookDto>> GetAllBooks(string OrderByParam)
+    public async Task<List<BookDto>> GetAllBooks(GetBooksAndOrderRequest booksParam)
     {
-        var books = await _libRepository.GetAllBooks(OrderByParam);
-
-        // var book = books[0];
-
-        // var average = (book.Ratings.Count() > 0) ? book.Ratings.Average(rt => rt.Score) : 0;
-
-        // var Average = books.Select( book => { if(book.Ratings.Count() > 0 ) book.Ratings.Average( xt => xt.Score);});
-        // var Average = books.Select(book => book.Ratings.Select(rt => rt.Score).Average()).First();
+        var books = await _libRepository.GetAllBooks(booksParam.Order);
 
         var booksDto = books.Select(book => (BookDto)book).ToList();
-
         return booksDto;
-        // foreach (var book in books)
-        // {
-        //     var bookDto = (BookDto)book;
-        // }
-        //return _mapper.Map<List<Contracts.ApiDTO.GetAllBooks.BookDto>>(books);
     }
 
-    // ... ... ...
+    public async Task<List<BookDto>> GetRecommendedBooks(GetRecommendedBooksRequest booksParam)
+    {
+        var books = await _libRepository.GetRecommendedBooks(booksParam.Genre);
+
+        var booksDto = books.Select(book => (BookDto)book).ToList();
+        return booksDto;
+    }
+
+    public async Task<GetBookByIdResponse> GetBookById(int id)
+    {
+        var book = await _libRepository.GetById(id);
+
+        var bookResponse = (GetBookByIdResponse)book;
+        return bookResponse;
+    }
+
+    public async Task DelBookById(DelBookByIdRequest delBookReq)
+    {
+        if (delBookReq.Secret != _config)
+            throw new SecurityException("Invalid secret key.");
+
+        await _libRepository.DelById(delBookReq.Id);
+    }
+
+    public async Task<CreateBookResponse> SaveOrUpdateBook(CreateBookRequest bookToProceed)
+    {
+        var book = await _libRepository.SaveOrUpdateBook((Book)bookToProceed);
+
+        return (CreateBookResponse)book;
+    }
+
+    public async Task<CreateReviewResponse> SaveReview(CreateReviewRequest toProceed)
+    {
+        var review = await _libRepository.SaveReview((Review)toProceed);
+
+        return (CreateReviewResponse)review;
+    }
+
+    public async Task CreateRate(CreateRateRequest toProceed)
+    {
+        await _libRepository.SaveRate((Rating)toProceed);
+
+        //return (CreateRateResponse)Rating;
+    }
 }

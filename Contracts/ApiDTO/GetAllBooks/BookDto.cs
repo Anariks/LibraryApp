@@ -18,7 +18,7 @@ public class BookDto
             Title = book.Title,
             Author = book.Author,
             // Rating = (book.Ratings.Any()) ? book.Ratings.Average(rt => rt.Score) : 0,
-            Rating = (book.Ratings.Any()) ? book.Ratings.Average(rt => rt.Score) : 0,
+            Rating = (book.Ratings.Any()) ? Math.Round(book.Ratings.Average(rt => rt.Score), 1) : 0,
             RevieswsNumber = book.Reviews.Count()
         };
     }

@@ -3,12 +3,12 @@ using FluentValidation;
 
 namespace Api.Validation;
 
-public class CreateOrUpdateBookValidar : AbstractValidator<CreateBookRequestDto>
+public class CreateOrUpdateBookValidator : AbstractValidator<CreateBookRequest>
 {
-    public CreateOrUpdateBookValidar()
+    public CreateOrUpdateBookValidator()
     {
         RuleFor(book => book.Id).GreaterThanOrEqualTo(0);
-        RuleFor(book => book.Title).NotNull();
+        RuleFor(book => book.Title).NotNull().NotEmpty();
         RuleFor(book => book.Genre).NotNull();
         RuleFor(book => book.Author).NotNull();
         RuleFor(book => book.Content).NotNull();

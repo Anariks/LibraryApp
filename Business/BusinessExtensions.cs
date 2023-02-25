@@ -12,10 +12,8 @@ public static class BusinessDataExtensions
 {
     public static IServiceCollection AddBusinessDataServices(this IServiceCollection services)
     {
-        // services.AddAutoMapper(_ => _.AddProfile<LibProfile>()).AddDbContext<LibDbContext>();
         services
             .AddDbContext<LibDbContext>()
-            // .AddAutoMapper(typeof(LibProfile));
             .AddSingleton(_ =>
             {
                 var configuration = new MapperConfiguration(cfg =>
