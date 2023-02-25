@@ -1,6 +1,6 @@
 namespace Contracts.Interfaces;
 using System.Collections.Generic;
-using Contracts.ApiDTO.Requests;
+using Contracts.ApiDTO;
 using Contracts.Database;
 
 public interface ILibRepository

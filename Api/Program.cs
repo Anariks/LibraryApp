@@ -1,14 +1,26 @@
 using Api.Validation;
 using Business;
-using Contracts.ApiDTO.Requests;
+using Contracts.ApiDTO;
 using Contracts.Interfaces;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Business.Configuration;
+using Serilog;
+using HybridModelBinding;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+//builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+// Add Serilog logging
+// Log.Logger = new LoggerConfiguration().Enrich.FromLogContext().WriteTo.Console().CreateLogger();
+
+builder.Host.UseSerilog(
+    (ctx, lc) =>
+    {
+        lc.ReadFrom.Configuration(builder.Configuration);
+    }
+);
 
 builder.Services.AddControllers();
 
@@ -16,9 +28,15 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
-builder.Services.AddScoped<IValidator<CreateBookRequest>, CreateOrUpdateBookValidator>();
+
 builder.Services.AddScoped<IValidator<GetBookByIdRequest>, GetBookByIdRequestValidator>();
 builder.Services.AddScoped<IValidator<GetBooksAndOrderRequest>, GetBooksAndOrderRequestValidator>();
+
+builder.Services.AddScoped<IValidator<GetBookByIdRequest>, GetBookByIdRequestValidator>();
+builder.Services.AddScoped<IValidator<DelBookByIdRequest>, DelBookByIdRequestValidator>();
+builder.Services.AddScoped<IValidator<CreateBookRequest>, CreateOrUpdateBookValidator>();
+builder.Services.AddScoped<IValidator<CreateReviewRequest>, CreateReviewRequestValidator>();
+builder.Services.AddScoped<IValidator<CreateRateRequest>, CreateRateRequestValidator>();
 
 //builder.Services.AddSwaggerGen();
 builder.Services.Configure<LibConfiguration>(builder.Configuration.GetSection("LibConfiguration"));
@@ -26,6 +44,16 @@ builder.Services.Configure<LibConfiguration>(builder.Configuration.GetSection("L
 builder.Services.AddSingleton<ILibConfiguration, LibConfiguration>();
 
 builder.Services.AddBusinessDataServices();
+builder.Services
+    .AddMvc()
+    .AddHybridModelBinder(options =>
+    {
+        /**
+         * This is optional and overrides internal ordering of how binding gets applied to a model that doesn't have explicit binding-rules.
+         * Internal ordering is: body => form-values => route-values => querystring-values => header-values
+         */
+        options.FallbackBindingOrder = new[] { Source.Route, Source.Body, Source.QueryString };
+    });
 builder.Services.AddScoped<ILibService, LibService>();
 
 // builder.Configuration.Bind("LibConfiguration", new LibConfiguration());
@@ -44,6 +72,8 @@ if (app.Environment.IsDevelopment())
     // app.UseSwagger();
     // app.UseSwaggerUI();
 }
+
+app.UseSerilogRequestLogging();
 
 // app.UseHttpsRedirection();
 // app.UseAuthorization();

@@ -1,6 +1,6 @@
 using Contracts.Database;
 
-namespace Contracts.ApiDTO.Requests;
+namespace Contracts.ApiDTO;
 
 public class CreateRateRequest
 {

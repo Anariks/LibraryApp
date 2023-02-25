@@ -1,7 +1,6 @@
 using System.Security;
 using Business.Configuration;
-using Contracts.ApiDTO.GetAllBooks;
-using Contracts.ApiDTO.Requests;
+using Contracts.ApiDTO;
 using Contracts.Database;
 using Contracts.Interfaces;
 using Microsoft.Extensions.Options;
@@ -18,27 +17,29 @@ public class LibService : ILibService
         _config = config.Value.SecretKey;
     }
 
-    public async Task<List<BookDto>> GetAllBooks(GetBooksAndOrderRequest booksParam)
+    public async Task<List<GetBooksResponse>> GetAllBooks(GetBooksAndOrderRequest booksParam)
     {
         var books = await _libRepository.GetAllBooks(booksParam.Order);
 
-        var booksDto = books.Select(book => (BookDto)book).ToList();
+        var booksDto = books.Select(book => (GetBooksResponse)book).ToList();
         return booksDto;
     }
 
-    public async Task<List<BookDto>> GetRecommendedBooks(GetRecommendedBooksRequest booksParam)
+    public async Task<List<GetBooksResponse>> GetRecommendedBooks(
+        GetRecommendedBooksRequest booksParam
+    )
     {
         var books = await _libRepository.GetRecommendedBooks(booksParam.Genre);
 
-        var booksDto = books.Select(book => (BookDto)book).ToList();
+        var booksDto = books.Select(book => (GetBooksResponse)book).ToList();
         return booksDto;
     }
 
     public async Task<GetBookByIdResponse> GetBookById(int id)
     {
-        var book = await _libRepository.GetById(id);
+        Book? book = await _libRepository.GetById(id);
 
-        var bookResponse = (GetBookByIdResponse)book;
+        var bookResponse = (book != null) ? (GetBookByIdResponse)book : null;
         return bookResponse;
     }
 

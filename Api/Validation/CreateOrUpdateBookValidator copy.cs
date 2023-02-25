@@ -1,4 +1,4 @@
-using Contracts.ApiDTO.Requests;
+using Contracts.ApiDTO;
 using FluentValidation;
 
 namespace Api.Validation;

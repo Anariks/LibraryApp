@@ -52,10 +52,12 @@ public class LibRepository : ILibRepository
 
     public async Task<Book> GetById(int id)
     {
-        return await _context.Books
+        Book? book = await _context.Books
             .Include(b => b.Ratings)
             .Include(b => b.Reviews)
             .FirstOrDefaultAsync(b => b.Id == id);
+
+        return book;
     }
 
     public async Task DelById(int id)
