@@ -1,6 +1,8 @@
 ﻿using Contracts.Database;
 using Contracts.Interfaces;
+using Contracts.Exceptions;
 using Data.Database;
+using Data.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repository;
@@ -8,8 +10,6 @@ namespace Data.Repository;
 public class LibRepository : ILibRepository
 {
     private readonly LibDbContext _context;
-
-    public LibRepository() { }
 
     public LibRepository(LibDbContext dbContext)
     {
@@ -24,7 +24,6 @@ public class LibRepository : ILibRepository
 
         if (book.Id == 0)
             return book;
-        // return await _context.Books.LastAsync();
 
         return book;
     }
@@ -57,6 +56,9 @@ public class LibRepository : ILibRepository
             .Include(b => b.Reviews)
             .FirstOrDefaultAsync(b => b.Id == id);
 
+        if (book == null)
+            throw new LibException(ErrorCode.BookNotFound, "Such a book was not found");
+
         return book;
     }
 
@@ -65,7 +67,7 @@ public class LibRepository : ILibRepository
         Book? book = await _context.Books.FindAsync(id);
 
         if (book == null)
-            throw new InvalidOperationException("Such a book was not found");
+            throw new LibException(ErrorCode.BookNotFound, "Such a book was not found");
 
         _context.Books.Remove(book);
         await _context.SaveChangesAsync();
@@ -76,8 +78,7 @@ public class LibRepository : ILibRepository
         Book? book = await _context.Books.FindAsync(review.BookId);
 
         if (book == null)
-            throw new InvalidOperationException("Such a book was not found");
-
+            throw new LibException(ErrorCode.BookNotFound, "Such a book was not found");
         await _context.Reviews.AddAsync(review);
         await _context.SaveChangesAsync();
 
@@ -89,7 +90,7 @@ public class LibRepository : ILibRepository
         Book? book = await _context.Books.FindAsync(rating.BookId);
 
         if (book == null)
-            throw new InvalidOperationException("Such a book was not found");
+            throw new LibException(ErrorCode.BookNotFound, "Such a book was not found");
 
         await _context.Ratings.AddAsync(rating);
         await _context.SaveChangesAsync();
