@@ -53,24 +53,8 @@ public class LibController : ControllerBase
     [Route("books/{id}")]
     public async Task<IActionResult> DelBookById([FromHybrid] DelBookByIdRequest delBookByIdRequest)
     {
-        try
-        {
-            await _service.DelBookById(delBookByIdRequest);
-
-            return NoContent();
-        }
-        catch (SecurityException ex)
-        {
-            return Unauthorized(ex.Message);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return NotFound(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-        }
+        await _service.DelBookById(delBookByIdRequest);
+        return NoContent();
     }
 
     [HttpPost]

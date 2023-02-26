@@ -5,6 +5,7 @@ namespace Contracts.Exceptions;
 public enum ErrorCode
 {
     BadRequest = 400,
+    Unauthorized = 401,
     BookNotFound = 404,
     InternalServerError = 500,
 }

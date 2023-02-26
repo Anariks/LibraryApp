@@ -2,7 +2,9 @@ using System.Security;
 using Business.Configuration;
 using Contracts.ApiDTO;
 using Contracts.Database;
+using Contracts.Exceptions;
 using Contracts.Interfaces;
+using Data.Exceptions;
 using Microsoft.Extensions.Options;
 
 public class LibService : ILibService
@@ -46,7 +48,7 @@ public class LibService : ILibService
     public async Task DelBookById(DelBookByIdRequest delBookReq)
     {
         if (delBookReq.Secret != _config)
-            throw new SecurityException("Invalid secret key.");
+            throw new LibException(ErrorCode.Unauthorized, "Invalid secret key.");
 
         await _libRepository.DelById(delBookReq.Id);
     }
