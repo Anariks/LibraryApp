@@ -455,3 +455,4 @@ $RECYCLE.BIN/
 
 *.txt
 *.json
+! appsettings.Development.json
