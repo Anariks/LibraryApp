@@ -4,7 +4,7 @@ namespace Contracts.Interfaces;
 
 public interface ILibService
 {
-    Task<List<GetBooksResponse>> GetAllBooks(GetBooksAndOrderRequest booksParam);
+    Task<List<GetBooksResponse>> GetAllBooksAndOrder(GetBooksAndOrderRequest booksParam);
     Task<List<GetBooksResponse>> GetRecommendedBooks(GetRecommendedBooksRequest booksParam);
     Task<GetBookByIdResponse> GetBookById(int id);
     Task DelBookById(DelBookByIdRequest id);

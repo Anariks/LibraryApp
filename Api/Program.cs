@@ -28,7 +28,6 @@ builder.Services
 
 builder.Services.AddFluentValidation();
 
-//builder.Services.AddSwaggerGen();
 builder.Services.Configure<LibConfiguration>(builder.Configuration.GetSection("LibConfiguration"));
 
 builder.Services.AddSingleton<ILibConfiguration, LibConfiguration>();
@@ -41,16 +40,6 @@ var app = builder.Build();
 
 app.UseMiddleware<LoggingRequestMiddleware>();
 app.UseMiddleware<ExceptionMiddleware>();
-
-if (app.Environment.IsDevelopment())
-{
-    // app.UseSwagger();
-    // app.UseSwaggerUI();
-}
-
-// app.UseSerilogRequestLogging();
-
-// app.UseHttpsRedirection();
 
 app.MapControllers();
 

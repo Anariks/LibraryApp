@@ -5,8 +5,8 @@ namespace Contracts.ApiDTO;
 public class CreateReviewRequest
 {
     public int Id { get; set; }
-    public string Message { get; init; }
-    public string Reviewer { get; init; }
+    public string? Message { get; init; }
+    public string? Reviewer { get; init; }
 
     public static implicit operator Review(CreateReviewRequest request) =>
         new Review

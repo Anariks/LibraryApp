@@ -28,7 +28,7 @@ public class LibRepository : ILibRepository
         return book;
     }
 
-    public async Task<List<Book>> GetAllBooks(string orderParam)
+    public async Task<List<Book>> GetAllBooksAndOrder(string orderParam)
     {
         return await _context.Books
             .Include(b => b.Ratings)

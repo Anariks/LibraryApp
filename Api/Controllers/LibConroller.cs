@@ -19,9 +19,11 @@ public class LibController : ControllerBase
 
     [HttpGet]
     [Route("books")]
-    public async Task<IActionResult> GetBooks([FromQuery] GetBooksAndOrderRequest getBooksRequest)
+    public async Task<IActionResult> GetAllBooksAndOrder(
+        [FromQuery] GetBooksAndOrderRequest getBooksRequest
+    )
     {
-        var result = await _service.GetAllBooks(getBooksRequest);
+        var result = await _service.GetAllBooksAndOrder(getBooksRequest);
 
         return Ok(result);
     }

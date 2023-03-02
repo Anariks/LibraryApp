@@ -19,9 +19,11 @@ public class LibService : ILibService
         _config = config.Value.SecretKey;
     }
 
-    public async Task<List<GetBooksResponse>> GetAllBooks(GetBooksAndOrderRequest booksParam)
+    public async Task<List<GetBooksResponse>> GetAllBooksAndOrder(
+        GetBooksAndOrderRequest booksParam
+    )
     {
-        var books = await _libRepository.GetAllBooks(booksParam.Order);
+        var books = await _libRepository.GetAllBooksAndOrder(booksParam.Order);
 
         var booksDto = books.Select(book => (GetBooksResponse)book).ToList();
         return booksDto;
@@ -70,7 +72,5 @@ public class LibService : ILibService
     public async Task CreateRate(CreateRateRequest toProceed)
     {
         await _libRepository.SaveRate((Rating)toProceed);
-
-        //return (CreateRateResponse)Rating;
     }
 }

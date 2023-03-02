@@ -5,7 +5,7 @@ using Contracts.Database;
 
 public interface ILibRepository
 {
-    Task<List<Book>> GetAllBooks(string orderParam);
+    Task<List<Book>> GetAllBooksAndOrder(string orderParam);
     Task<List<Book>> GetRecommendedBooks(string filterParam);
     Task<Book> GetById(int id);
     Task DelById(int id);
