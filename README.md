@@ -3,9 +3,6 @@
 Hello! Here is little application with simple library model. 
 I used here layered architecture to separate different parts of the app. 
 
-For that moment this api avaliable on Azure:
-<https://library-test.azurewebsites.net>
-
 What did I use and implement here?
 
 	- Entity Framework Core with in-memory database. 
